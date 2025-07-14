@@ -8,7 +8,7 @@ import AdminDashboard from './components/AdminDashboard';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import './App.css';
 
-const socket = io('http://localhost:5000', {
+const socket = io(process.env.REACT_APP_API_BASE || 'http://localhost:5000', {
   withCredentials: true
 });
 
