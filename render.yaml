@@ -1,27 +1,17 @@
 services:
   - type: web
-    name: scoring-system-backend
+    name: scoring-system-scout
     env: node
     plan: free
     region: oregon
-    rootDir: server
-    buildCommand: npm install
+    buildCommand: npm run install-all && npm run build
     startCommand: npm start
     envVars:
       - key: PORT
         value: 10000
       - key: JWT_SECRET
         value: your-jwt-secret-here
-      - key: CLIENT_URL
-        value: https://scoring-system-frontend.onrender.com
       - key: NODE_ENV
         value: production
-
-  - type: static
-    name: scoring-system-frontend
-    rootDir: client
-    buildCommand: npm install && npm run build
-    staticPublishPath: build
-    envVars:
       - key: REACT_APP_API_BASE
-        value: https://scoring-system-backend.onrender.com
+        value: https://scoring-system-scout.onrender.com

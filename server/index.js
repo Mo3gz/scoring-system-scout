@@ -12,7 +12,7 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: process.env.CLIENT_URL || "http://localhost:3000",
+    origin: process.env.NODE_ENV === 'production' ? true : (process.env.CLIENT_URL || "http://localhost:3000"),
     methods: ["GET", "POST"],
     credentials: true
   }
@@ -20,7 +20,7 @@ const io = socketIo(server, {
 
 // Middleware
 app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:3000',
+  origin: process.env.NODE_ENV === 'production' ? true : (process.env.CLIENT_URL || 'http://localhost:3000'),
   credentials: true
 }));
 app.use(express.json());
@@ -124,7 +124,7 @@ app.post('/api/login', async (req, res) => {
 
   res.cookie('token', token, {
     httpOnly: true,
-    secure: false, // Set to true in production with HTTPS
+    secure: process.env.NODE_ENV === 'production', // Set to true in production with HTTPS
     maxAge: 24 * 60 * 60 * 1000 // 24 hours
   });
 
@@ -481,10 +481,10 @@ io.on('connection', (socket) => {
 
 // Serve static files in production
 if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '..', '..', 'client', 'build')));
+  app.use(express.static(path.join(__dirname, '..', 'client', 'build')));
 
   app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', '..', 'client', 'build', 'index.html'));
+    res.sendFile(path.join(__dirname, '..', 'client', 'build', 'index.html'));
   });
 }
 
